@@ -1,2 +1,7 @@
-Support de cours React début.
-test
+Cours 1 :
+
+Single Page Application vs MultiPage Application
+
+Question :
+
+Dans quel cas utilise t'on le SPA ou le MPA?
