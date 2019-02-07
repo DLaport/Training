@@ -27,7 +27,8 @@ const famille ={
 
 class App extends Component {
   state = {
-    famille
+    famille,
+    isShow: false
   }
 
   handleClick = ( num ) => {
@@ -37,34 +38,65 @@ class App extends Component {
     this.setState({ famille })
   }
 
-  handleChange = event => {
+  handleChange = (event, id) => {
     const famille = { ... this.state.famille }
     const nom = event.target.value
-    console.log(nom)
-    famille.membre1.nom = nom
+    famille[id].nom = nom
+    this.setState({ famille })
+  }
+
+  handleShowDescription = () => {
+    const isShow = !this.state.isShow
+    this.setState({ isShow })
+  }
+
+  hideName = id => {
+    const famille = { ... this.state.famille }
+    famille[id].nom = 'X'
     this.setState({ famille })
   }
   
   
+  
   render() {
     const { titre } = this.props
-    const { famille } = this.state
+    const { famille, isShow } = this.state
+
+    let description = null
+
+    if(isShow){
+      description = <strong>new test</strong>
+    }
+
+    const liste = Object.keys(famille) 
+    .map(membre =>( //sert à faire une boucle autour d'un certain nombre de données qui sont d'un tableau
+      <Membre 
+        hideName={ () => this.hideName( membre ) }
+        key={ membre }
+        nom={ famille[membre].nom } 
+        age={ famille[membre].age }
+        handleChange={ event => this.handleChange( event, membre ) }/>
+    ))
+
+    console.log(liste);
+
     return (
-      <Fragment> 
         <div className="App">
-            <input value={ famille.membre1.nom } onChange={this.handleChange} type='text'/>
-            <h1>{titre}</h1>
-            <h1>React App</h1>  
+          
+          { liste }
+          <Membre 
+            nom={famille.membre4.nom} 
+            age={famille.membre4.age}>
+            {description}
+            <button 
+              onClick={this.handleShowDescription}>
+              {
+                isShow ? 'Cacher': 'Montrer' 
+              }
+            </button>    
+          </Membre>
+          <Button vieillir={() =>this.handleClick(2)}/> 
         </div>
-        <h2>Mon second titre</h2>
-        <Membre nom={famille.membre1.nom} age={famille.membre1.age}/>
-        <Membre nom={famille.membre2.nom} age={famille.membre2.age}/>
-        <Membre nom={famille.membre3.nom} age={famille.membre3.age}/>
-        <Membre nom={famille.membre4.nom} age={famille.membre4.age}>
-          <strong>new test</strong>
-        </Membre>
-        <Button vieillir={() =>this.handleClick(2)}/>
-      </Fragment>
     );
   }
 }
